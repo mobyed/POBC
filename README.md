@@ -37,10 +37,10 @@ make boost libote
 
 ## 编译 MASCOT 协议可执行文件
 ```bash
-make mascot-party.x
+make -j mascot-party.x
 ```
 
-## 运行脚本
+## 替换运行脚本
 ```bash
 replace the ./Scripts/run-common.sh
 ```
