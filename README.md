@@ -1,11 +1,46 @@
 # OBC
-##make sure "sudo apt upgrade / sudo apt install clang"
-##Pull the MP-SPDZ submodule: git submodule update --init --recursive
-##Navigate into the MP-SPDZ folder and install all dependencies (cf MP-SPDZ/REAMDE and MP-SPDZ online documentation)
-###on our servers (Ubuntu 22.04.2 LTS), we installed apt-get install automake build-essential cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm htop python3-pip libgmp3-dev 
-###configure USE_GF2N_LONG: echo "USE_GF2N_LONG = 1" > CONFIG.mine
-###configure echo "url = "https://archives.boost.io/release/1.{0}.0/source/{1}".format(version, arch)" > deps\libOTe\cryptoTools\thirdparty\getBoost.py
-###make boost libote
-###make mascot-party.x
+## 安装依赖
+```bash
+sudo apt upgrade
+sudo apt install clang
+```
 
-###./Scripts/run-common.sh
+## 拉取 MP-SPDZ 子模块
+```bash
+git submodule update --init --recursive
+```
+
+## 进入 MP-SPDZ 目录并安装所有依赖
+参考 `MP-SPDZ/README` 和 MP-SPDZ 在线文档
+
+### 在我们的服务器（Ubuntu 22.04.2 LTS）上安装的依赖
+```bash
+sudo apt-get install automake build-essential cmake git \
+libboost-dev libboost-thread-dev libntl-dev libsodium-dev \
+libssl-dev libtool m4 python3 texinfo yasm htop python3-pip libgmp3-dev
+```
+
+## 配置 USE_GF2N_LONG
+```bash
+echo "USE_GF2N_LONG = 1" > CONFIG.mine
+```
+
+## 配置 Boost 下载地址
+```bash
+echo 'url = "https://archives.boost.io/release/1.{0}.0/source/{1}".format(version, arch)' > deps/libOTe/cryptoTools/thirdparty/getBoost.py
+```
+
+## 编译 Boost 和 libOTe
+```bash
+make boost libote
+```
+
+## 编译 MASCOT 协议可执行文件
+```bash
+make mascot-party.x
+```
+
+## 运行脚本
+```bash
+replace the ./Scripts/run-common.sh
+```
