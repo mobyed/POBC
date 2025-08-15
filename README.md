@@ -42,5 +42,5 @@ make -j mascot-party.x
 
 ## 替换运行脚本
 ```bash
-replace the ./Scripts/run-common.sh
+cp -r ../code/Scripts/run-common.sh ./Scripts/run-common.sh
 ```
