@@ -152,7 +152,7 @@ def aes_obc64_128_decrypt(c, tag_expected, k, nonce):
 
 
     b = MultiArray([blcoks_num, 16], sgf2n)
-    @for_range_opt_multithread((blcoks_num+1)//2, blcoks_num)
+    @for_range_opt_multithread(blcoks_num, blcoks_num)
     def _(i):
         input_block = Array(16,cgf2n)
         input_block = a[i]
