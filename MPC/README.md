@@ -1,16 +1,16 @@
 # OBC
-## 安装依赖
+## Make sure clang++ has been installed
 ```bash
 sudo apt upgrade
 sudo apt install clang
 ```
 
-## 拉取 MP-SPDZ 子模块
+## Pull MP-SPDZ submodule
 ```bash
 git submodule update --init --recursive
 ```
 
-## 进入 MP-SPDZ 目录并安装所有依赖
+## Navigate to MP-SPDZ directory and install all dependencies.
 参考 `MP-SPDZ/README` 和 MP-SPDZ 在线文档
 
 ### 在我们的服务器（Ubuntu 22.04.2 LTS）上安装的依赖
