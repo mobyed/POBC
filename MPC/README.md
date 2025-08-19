@@ -11,7 +11,7 @@ git submodule update --init --recursive
 ```
 
 ## Navigate to MP-SPDZ directory and install all dependencies.
-参考 `MP-SPDZ/README` 和 MP-SPDZ 在线文档
+Refer to [MP-SPDZ/README](https://github.com/data61/MP-SPDZ/blob/cf51528de6248ddef1aef1e2a281b7a0a28f7f5b/README.md) and [MP-SPDZ online documentation](https://mp-spdz.readthedocs.io/en/latest/).
 
 ### 在我们的服务器（Ubuntu 22.04.2 LTS）上安装的依赖
 ```bash
@@ -44,3 +44,5 @@ make -j mascot-party.x
 ```bash
 cp -r ../code/Scripts/run-common.sh ./Scripts/run-common.sh
 ```
+
+##
