@@ -41,25 +41,25 @@ def aes_ctr_dec(cipher, AES, counter, ciphertext):
             m_ctr += 1
     return message
 
-def digest(blocks, nonce):
-    sigma = cint(0)
-    for block in [nonce] + blocks:
-        bits = [cint(b) for cell in block for b in Aes128(1).bit_decompose_embedding(cell, range(8))]
-        element = cint(0)
-        for i, b in enumerate(bits):
-            element += b * (cint(1) << i)
-        sigma += element
+# def digest(blocks, nonce):
+#     sigma = cint(0)
+#     for block in [nonce] + blocks:
+#         bits = [cint(b) for cell in block for b in Aes128(1).bit_decompose_embedding(cell, range(8))]
+#         element = cint(0)
+#         for i, b in enumerate(bits):
+#             element += b * (cint(1) << i)
+#         sigma += element
     
-    hash = sigma.digest(16)
-    bits = hash.bit_decompose()
-    block = []
-    for i in range(16):
-        byte_bits = bits[8*i:8*i+8]
-        byte = cgf2n(0)
-        for j, bit in enumerate(byte_bits):
-            byte += cgf2n(bit.reveal()) << j
-        block.append(byte)
-    return block
+#     hash = sigma.digest(16)
+#     bits = hash.bit_decompose()
+#     block = []
+#     for i in range(16):
+#         byte_bits = bits[8*i:8*i+8]
+#         byte = cgf2n(0)
+#         for j, bit in enumerate(byte_bits):
+#             byte += cgf2n(bit.reveal()) << j
+#         block.append(byte)
+#     return block
 
 def pack(blocks, base_type):
     n = len(blocks)
@@ -176,43 +176,43 @@ def dec_pmac_aes128(ciphertext, tag, key, nonce):
     check = tag_check(tag, computed_tag, lambda x: Aes128(1).bit_decompose_embedding(x, range(8)))
     return check.reveal(), message_revealed
 
-def enc_htmac_aes128(message, key, nonce):
-    assert len(message) % 16 == 0
-    assert len(nonce) == 12, f'{len(nonce)}: {nonce}'
-    assert len(key) == 16
-    nparallel = key[0].size
+# def enc_htmac_aes128(message, key, nonce):
+#     assert len(message) % 16 == 0
+#     assert len(nonce) == 12, f'{len(nonce)}: {nonce}'
+#     assert len(key) == 16
+#     nparallel = key[0].size
 
-    cipher = Aes128(1)
-    expanded_key = cipher.expandAESKey(key)
-    AES = cipher.encrypt_without_key_schedule_no_emb(expanded_key)
+#     cipher = Aes128(1)
+#     expanded_key = cipher.expandAESKey(key)
+#     AES = cipher.encrypt_without_key_schedule_no_emb(expanded_key)
 
-    ctr_init = nonce + [cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0x1, size=nparallel)]
-    ciphertext = aes_ctr_dec(cipher, AES, ctr_init, message)
+#     ctr_init = nonce + [cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0x1, size=nparallel)]
+#     ciphertext = aes_ctr_dec(cipher, AES, ctr_init, message)
 
-    # group into blocks
-    ciphertext_blocks = [ciphertext[16*i:16*i+16] for i in range(len(message) // 16)]
-    h = digest(ciphertext_blocks, nonce)
+#     # group into blocks
+#     ciphertext_blocks = [ciphertext[16*i:16*i+16] for i in range(len(message) // 16)]
+#     h = digest(ciphertext_blocks, nonce)
     
-    tag = AES(h)
-    return ciphertext, [cell.reveal() for cell in tag]
+#     tag = AES(h)
+#     return ciphertext, [cell.reveal() for cell in tag]
 
-def dec_htmac_aes128(ciphertext, tag, key, nonce):
-    assert len(ciphertext) % 16 == 0
-    assert len(key) == 16
-    nparallel = key[0].size
-    assert len(nonce) == 12
+# def dec_htmac_aes128(ciphertext, tag, key, nonce):
+#     assert len(ciphertext) % 16 == 0
+#     assert len(key) == 16
+#     nparallel = key[0].size
+#     assert len(nonce) == 12
     
-    cipher = Aes128(1)
-    expanded_key = cipher.expandAESKey(key)
-    AES = cipher.encrypt_without_key_schedule_no_emb(expanded_key)
+#     cipher = Aes128(1)
+#     expanded_key = cipher.expandAESKey(key)
+#     AES = cipher.encrypt_without_key_schedule_no_emb(expanded_key)
 
-    ctr_init = nonce + [cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0x1, size=nparallel)]
-    message = aes_ctr_dec(cipher, AES, ctr_init, ciphertext)
+#     ctr_init = nonce + [cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0, size=nparallel), cgf2n(0x1, size=nparallel)]
+#     message = aes_ctr_dec(cipher, AES, ctr_init, ciphertext)
 
-    # group into blocks
-    ciphertext_blocks = [ciphertext[16*i:16*i+16] for i in range(len(message) // 16)]
-    h = digest(ciphertext_blocks, nonce)
+#     # group into blocks
+#     ciphertext_blocks = [ciphertext[16*i:16*i+16] for i in range(len(message) // 16)]
+#     h = digest(ciphertext_blocks, nonce)
 
-    computed_tag = AES(h)
-    check = tag_check(tag, computed_tag, lambda x: cipher.bit_decompose_embedding(x, range(8)))
-    return check.reveal(), message
+#     computed_tag = AES(h)
+#     check = tag_check(tag, computed_tag, lambda x: cipher.bit_decompose_embedding(x, range(8)))
+#     return check.reveal(), message

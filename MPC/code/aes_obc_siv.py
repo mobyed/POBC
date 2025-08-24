@@ -31,26 +31,6 @@ test_message = "6bc1bee22e409f96e93d7e117393172a"
 test_key = "2b7e151628aed2a6abf7158809cf4f3c"
 
 
-
-def single_encryption():
-    key = [sgf2n(x) for x in conv(test_key)]
-    # key[0] = box.apply_sbox(key[0])
-    # PreprocInverseEmbedding(key[0])
-    message = [sgf2n(x) for x in conv(test_message)]
-
-    cipher = Aes128(nparallel)
-    key = [cipher.ApplyEmbedding(_) for _ in key]
-    expanded_key = cipher.expandAESKey(key)
-
-    AES = cipher.encrypt_without_key_schedule(expanded_key)
-
-    ciphertext = AES(message)
-
-    for block in ciphertext:
-        print_ln('%s', block.reveal())
-
-single_encryption()
-
 """
 
 def incr_ctr_be_vec(base_ctr, nparallel, count):
@@ -212,7 +192,7 @@ if BENCHMARK:
     ciphertext = random_bytes(N, cgf2n)
     tag = random_bytes(16, cgf2n)
     start_timer(1)
-    check, message = aes_obc_128_decrypt(ciphertext, tag, key, nonce)
+    check, message = aes_obc_siv_128_decrypt(ciphertext, tag, key, nonce)
     stop_timer(1)
     print_ln('Tag: %s', check)
     print_ln("Message")
