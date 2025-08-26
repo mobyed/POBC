@@ -21,12 +21,12 @@ libssl-dev libtool m4 python3 texinfo yasm htop python3-pip libgmp3-dev
 ```
 
 ## Configure USE_GF2N_LONG
-```bash
+```
 echo "USE_GF2N_LONG = 1" > CONFIG.mine
 ```
 
 ## Configure Boost download address
-```bash
+```
 echo 'url = "https://archives.boost.io/release/1.{0}.0/source/{1}".format(version, arch)' > deps/libOTe/cryptoTools/thirdparty/getBoost.py
 ```
 
@@ -47,7 +47,7 @@ cp -r ../code/Scripts/run-common.sh ./Scripts/run-common.sh
 
 ## Test and Run
 - Now we can compile the bytecode for the benchmark. All modes can be compiled through the 
-`bash
+`
 benchmark
 `
  file where the arguments give details about the mode, the SIMD factor(default: 1) and the message length. For example:
@@ -55,11 +55,11 @@ benchmark
 $> ./compile.py benchmark aes_obc64 1 16
 `
 - This creates 
-`bash
+`
 Programs/Schedules/benchmark-aes_obc64-1-16.sch
 `
  and 
-`bash
+`
 Programs/Bytecode/benchmark-aes_obc64-1-16.bc
 `
 - The following circuits are available
