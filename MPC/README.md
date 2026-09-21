@@ -1,4 +1,4 @@
-# OBC
+# POBC
 ## Make sure clang++ has been installed
 ```bash
 sudo apt upgrade
@@ -52,26 +52,27 @@ benchmark
 `
  file where the arguments give details about the mode, the SIMD factor(default: 1) and the message length. For example:
 `bash
-$> ./compile.py benchmark aes_obc64 1 16
+$> ./compile.py benchmark aes_pobc64 1 16
 `
 - This creates 
 `
-Programs/Schedules/benchmark-aes_obc64-1-16.sch
+Programs/Schedules/benchmark-aes_pobc64-1-16.sch
 `
  and 
 `
-Programs/Bytecode/benchmark-aes_obc64-1-16.bc
+Programs/Bytecode/benchmark-aes_pobc64-1-16.bc
 `
 - The following circuits are available
     * AES-GCM  `aes_gcm64`
-    * AES-OBC  `aes_obc64`
+    * AES-POBC  `aes_pobc64`
     * AES-GCM-SIV  `aes_gcm_siv64`
-    * AES-OBC-SIV  `aes_obc_siv`
+    * AES-POBC-SIV  `aes_pobc_siv`
     * AES-CTR-PMAC  `pmac_aes64`
     * ForkAES-Jolteon `jolteon_forkaes64`(cite from [Eevee](https://github.com/KULeuven-COSIC/Eevee))
     * ForkAES-Espeon `espeon_forkaes64`(cite from [Eevee](https://github.com/KULeuven-COSIC/Eevee))
       
+
 Note that the benchmark just decrypts a random/zero ciphertext with a random/zero key and Eevee family need to add manually in benchmark.
 
 - In order to test the function, MPC protocol can run locally, for example, each MPC party runs on a local PC and communicates through a local host. MP-SPDZ has provided useful scripts for this.
-  (In the MP-SPDZ directory) Use ` Scripts/mascot.sh -v --batch-size 64 benchmark-aes_obc64-1-16 ` to run the previously compiled benchmark. Option ` -v ` gives more detailed information about executing and reporting timing data. And option ` --batch-size ` gives a more accurate test result.
+  (In the MP-SPDZ directory) Use ` Scripts/mascot.sh -v --batch-size 64 benchmark-aes_pobc64-1-16 ` to run the previously compiled benchmark. Option ` -v ` gives more detailed information about executing and reporting timing data. And option ` --batch-size ` gives a more accurate test result.

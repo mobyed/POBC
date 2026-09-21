@@ -1,7 +1,7 @@
-#ifndef AES_OBC_SIV_H
-#define AES_OBC_SIV_H
+#ifndef AES_POBC_SIV_H
+#define AES_POBC_SIV_H
 
-int aes_obc_siv_encrypt(
+int aes_pobc_siv_encrypt(
   /** ciphertext destination buffer */
   unsigned char *c,
   /** initialization vector (tag) destination buffer */
@@ -14,7 +14,7 @@ int aes_obc_siv_encrypt(
   const unsigned char *k
 );
 
-int aes_obc_siv_decrypt(
+int aes_pobc_siv_decrypt(
   /** plaintext destination buffer */
   unsigned char *m,
   /** ciphertext and ciphertext length */

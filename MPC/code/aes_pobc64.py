@@ -67,13 +67,13 @@ def aes_encrypt_block(state: Array, round_keys, cipher: Aes128):
     return state
 
 
-def aes_obc64_128_decrypt(c, tag_expected, k, nonce):
+def aes_pobc64_128_decrypt(c, tag_expected, k, nonce):
     assert len(k) == 16
     assert len(tag_expected) == 16
     nparallel = tag_expected[0].size
     assert len(nonce) == 12
     m_blocks = (len(c) + 15) // 16
-    t_blocks = (len(c) + 11) // 12
+    t_blocks = len(c) // 12 + 1
     blcoks_num = 1 + m_blocks + t_blocks
 
     cipher = Aes128(nparallel)
@@ -88,8 +88,8 @@ def aes_obc64_128_decrypt(c, tag_expected, k, nonce):
             round_keys[r][j] = expanded_key[r * 16 + j]
     # print(len(round_keys))
     # print(len(round_keys[0]))
-
-    pad = [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(c))
+    # pad = [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(c))
+    pad = [cgf2n(0x80, size=nparallel)] + [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(c) - 1)
 
     a = MultiArray([blcoks_num, 16], cgf2n)
     iv_0 = incr_ctr_be_vec(regint(0), nparallel, 1)
@@ -110,8 +110,8 @@ def aes_obc64_128_decrypt(c, tag_expected, k, nonce):
             a[i + 1][4 + j] = nonce[j]
 
 
-
-    t_ctrs = incr_ctr_be_vec(regint(2**31 + 1), nparallel, t_blocks)
+    # t_ctrs = incr_ctr_be_vec(regint(2**31 + 1), nparallel, t_blocks)
+    t_ctrs = incr_ctr_be_vec(regint(2**31), nparallel, t_blocks)
 
     # Fill the first 4 bytes with t_ctrs and the last 12 bytes with c => a[16*(16*m_blocks+15)...]
     for i in range(t_blocks - 1):
@@ -177,7 +177,7 @@ if BENCHMARK:
     ciphertext = random_bytes(N, cgf2n)
     tag = random_bytes(16, cgf2n)
     start_timer(1)
-    check, message = aes_obc_128_decrypt(ciphertext, tag, key, nonce)
+    check, message = aes_pobc_128_decrypt(ciphertext, tag, key, nonce)
     stop_timer(1)
     print_ln('Tag: %s', check)
     print_ln("Message")
@@ -189,7 +189,7 @@ else:
     ciphertext = [cgf2n(x, size=nparallel) for x in conv("9d6490765381e7f2241218de5caeae3e7af6f4ee93f7ae3562051e5f088a43747f")]
     tag = [cgf2n(x, size=nparallel) for x in conv("ffa633b9d065d916bdee1d0ae8d3cd9e")]
 
-    check, dec_mes = aes_obc_128_decrypt(ciphertext, tag, key, nonce)
+    check, dec_mes = aes_pobc_128_decrypt(ciphertext, tag, key, nonce)
     print_ln('Check tag = %s', check)
     for byte in dec_mes:
         print_ln("%s", byte.reveal())

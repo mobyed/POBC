@@ -1,4 +1,4 @@
-#include "aes_obc.h"
+#include "aes_pobc.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,7 +41,7 @@ static inline void process_blocks(mbedtls_aes_context *ctx, const unsigned char 
     }
 }
 
-int aes_obc_encrypt(unsigned char *restrict c, unsigned char *restrict tag, const unsigned char *restrict m, unsigned long long mlen, const unsigned char *restrict ad, unsigned long long adlen, const unsigned char *restrict npub, const unsigned char *restrict k)
+int aes_pobc_encrypt(unsigned char *restrict c, unsigned char *restrict tag, const unsigned char *restrict m, unsigned long long mlen, const unsigned char *restrict ad, unsigned long long adlen, const unsigned char *restrict npub, const unsigned char *restrict k)
 {
     mbedtls_aes_context ctx;
     unsigned char nonce_counter[AES_BLOCK_LEN] = {0};

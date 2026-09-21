@@ -67,7 +67,7 @@ def aes_encrypt_block(state: Array, round_keys, cipher: Aes128):
     return state
 
 
-def aes_obc_siv_128_decrypt(c, tag_expected, k, nonce):
+def aes_pobc_siv_128_decrypt(c, tag_expected, k, nonce):
     """ 
     c : ciphertext
     tag_expected: IV*
@@ -119,13 +119,13 @@ def aes_obc_siv_128_decrypt(c, tag_expected, k, nonce):
     ptx = Array(len(message), cgf2n)
     for i in range(len(message)):
         ptx[i] = message[i]
-
-    t_blocks = (len(ptx) + 11) // 12
-
-    pad = [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(ptx))
+    # t_blocks = (len(ptx) + 11) // 12
+    t_blocks = len(ptx) // 12 + 1
+    # pad = [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(ptx))
+    pad = [cgf2n(0x80, size=nparallel)] + [cgf2n(0, size=nparallel)] * (12 * t_blocks - len(ptx) - 1)
     temp_t = MultiArray([t_blocks, 16], cgf2n)
-
-    t_ctrs = incr_ctr_be_vec(regint(2**31 + 1), nparallel, t_blocks)
+    # t_ctrs = incr_ctr_be_vec(regint(2**31 + 1), nparallel, t_blocks)
+    t_ctrs = incr_ctr_be_vec(regint(2**31), nparallel, t_blocks)
 
     # Fill the first 4 bytes with t_ctrs and the last 12 bytes with ptx
     for i in range(t_blocks - 1):
@@ -192,7 +192,7 @@ if BENCHMARK:
     ciphertext = random_bytes(N, cgf2n)
     tag = random_bytes(16, cgf2n)
     start_timer(1)
-    check, message = aes_obc_siv_128_decrypt(ciphertext, tag, key, nonce)
+    check, message = aes_pobc_siv_128_decrypt(ciphertext, tag, key, nonce)
     stop_timer(1)
     print_ln('Tag: %s', check)
     print_ln("Message")
@@ -204,7 +204,7 @@ else:
     ciphertext = [cgf2n(x, size=nparallel) for x in conv("9d6490765381e7f2241218de5caeae3e7af6f4ee93f7ae3562051e5f088a43747f")]
     tag = [cgf2n(x, size=nparallel) for x in conv("ffa633b9d065d916bdee1d0ae8d3cd9e")]
 
-    check, dec_mes = aes_obc_128_decrypt(ciphertext, tag, key, nonce)
+    check, dec_mes = aes_pobc_128_decrypt(ciphertext, tag, key, nonce)
     print_ln('Check tag = %s', check)
     for byte in dec_mes:
         print_ln("%s", byte.reveal())

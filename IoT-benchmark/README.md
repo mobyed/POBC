@@ -8,7 +8,7 @@ We use the STM32F407G-DISC1 board that runs the benchmark code. The timing resul
 | PA2                          | RXD                                        |
 | PA3                          | TXD                                        |
 
-The Serial-to-USB converter is then connected via USB to the PC. If the pins of the microcontroller are different, this change has to be reflected in the benchmark source code (e.g. `aes_obc_benchmark.c`).
+The Serial-to-USB converter is then connected via USB to the PC. If the pins of the microcontroller are different, this change has to be reflected in the benchmark source code (e.g. `aes_pobc_benchmark.c`).
 
 ### Build
 ```bash
@@ -30,24 +30,24 @@ After finishing the above steps, several `.bin` files created in this folder, wh
 	For example, you can run
 	
 	```bash
-	./generate.x aes_obc 32 1000 > aes_obc_32bytes_1000
+	./generate.x aes_pobc 32 1000 > aes_pobc_32bytes_1000
 	```
   
-  to output 1000 samples of 32 bytes message/ciphertext pairs, encrypted by AES-OBC.
+  to output 1000 samples of 32 bytes message/ciphertext pairs, encrypted by AES-POBC.
   
 - `run-experiment.py` Given a file with test vectors in the format of `generate.x`, sends a test vector (key, nonce, message) to the connected M4, receives ciphertext, tag and the cycle count. In the end, the script saves all cyclecounts and computes an average cyclecount.
 	
 	For example, you can run
 	
 	```bash
-	python run-exeriment.py --samples aes_obc_32bytes_1000 -o aes_obc_32bytes_1000_cycles
+	python run-exeriment.py --samples aes_pobc_32bytes_1000 -o aes_pobc_32bytes_1000_cycles
 	```
 	
 	to test encryption performance of different algorithms in Cortex-M4 device (relative `.bin` files must be uploaded to device before test an corresponding algorithm), then the total cycles will output in the terminal.
 
 ### Modes Provided
-- **AES-OBC** with instantiation `AES-128` in `aes-obc/aes_obc.h, aes-obc/aes_obc.c`
-- **AES-OBC-SIV** with instantiation `AES-128` in `aes-obc/aes_obc_siv.h, aes-obc/aes_obc_siv.c`
+- **AES-POBC** with instantiation `AES-128` in `aes-pobc/aes_pobc.h, aes-pobc/aes_pobc.c`
+- **AES-POBC-SIV** with instantiation `AES-128` in `aes-pobc/aes_pobc_siv.h, aes-pobc/aes_pobc_siv.c`
 - **AES-GCM** with instantiation `AES-128` in `aes/aes_gcm.h, aes/aes_gcm.c`
 - **AES-GCM-SIV** with instantiation `AES-128` in `aes/aes_gcm_siv.h, aes/aes_gcm_siv.c`
 - **AES-CTR-PMAC** with instantiation `AES-128` in `aes-modes/aes_modes.h, aes-modes/aes_modes.c`

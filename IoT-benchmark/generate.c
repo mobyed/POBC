@@ -4,8 +4,8 @@
 #include <assert.h>
 #include "aes/aes_gcm_siv.h"
 #include "aes/aes_gcm.h"
-#include "aes-obc/aes_obc.h"
-#include "aes-obc/aes_obc_siv.h"
+#include "aes-pobc/aes_pobc.h"
+#include "aes-pobc/aes_pobc_siv.h"
 #include "aes-modes/aes_modes.h"
 #include "eevee-forkskinny/jolteon.h"
 #include "eevee-forkskinny/espeon.h"
@@ -14,8 +14,8 @@ static const char *HTMAC_AES = "htmac_aes";
 static const char *PMAC_AES = "pmac_aes";
 static const char *GCM_SIV_AES_128 = "aes_gcm_siv_128";
 static const char *GCM_AES_128 = "aes_gcm_128";
-static const char *OBC_AES = "aes_obc";
-static const char *OBC_SIV_AES = "aes_obc_siv";
+static const char *POBC_AES = "aes_pobc";
+static const char *POBC_SIV_AES = "aes_pobc_siv";
 static const char *JOLTEON_AES_128 = "jolteon_aes_128";
 static const char *ESPEON_AES_128 = "espeon_aes_128";
 
@@ -62,8 +62,8 @@ void print_buf_hex(unsigned char *buf, unsigned int len)
     printf("%02x", buf[i]);
 }
 
-/* Adapter functions for OBC-SIV to match standard AEAD interface */
-static int aead_obc_siv_encrypt_wrapper(
+/* Adapter functions for POBC-SIV to match standard AEAD interface */
+static int aead_pobc_siv_encrypt_wrapper(
     unsigned char *c,
     unsigned char *tag,
     const unsigned char *m, unsigned long long mlen,
@@ -73,10 +73,10 @@ static int aead_obc_siv_encrypt_wrapper(
 )
 {
     (void)npub;
-    return aes_obc_siv_encrypt(c, tag, m, mlen, ad, adlen, k);
+    return aes_pobc_siv_encrypt(c, tag, m, mlen, ad, adlen, k);
 }
 
-static int aead_obc_siv_decrypt_wrapper(
+static int aead_pobc_siv_decrypt_wrapper(
     unsigned char *m,
     const unsigned char *c, unsigned long long clen,
     const unsigned char *tag,
@@ -86,7 +86,7 @@ static int aead_obc_siv_decrypt_wrapper(
 )
 {
     (void)npub;
-    return aes_obc_siv_decrypt(m, c, clen, ad, adlen, tag, k);
+    return aes_pobc_siv_decrypt(m, c, clen, ad, adlen, tag, k);
 }
 
 /* Adapter functions for AES modes to match standard AEAD interface */
@@ -251,26 +251,26 @@ int generate(const char *primitive, int mlen, int samples, int check)
       return -2;
     }
   }
-  else if(strncmp(OBC_AES, primitive, strlen(OBC_AES)) == 0)
+  else if(strncmp(POBC_AES, primitive, strlen(POBC_AES)) == 0)
   {
     keylen = 16;
     noncelen = 12;
     taglen = 16;
-    aead_enc = aes_obc_encrypt;
+    aead_enc = aes_pobc_encrypt;
     aead_dec = NULL;
     if(check)
     {
-        printf("--check not supported for primitive %s\n", OBC_AES);
+        printf("--check not supported for primitive %s\n", POBC_AES);
         return -2;
     }
   }
-  else if(strncmp(OBC_SIV_AES, primitive, strlen(OBC_SIV_AES)) == 0)
+  else if(strncmp(POBC_SIV_AES, primitive, strlen(POBC_SIV_AES)) == 0)
   {
     keylen = 16;
     noncelen = 16;
     taglen = 16;
-    aead_enc = aead_obc_siv_encrypt_wrapper;
-    aead_dec = aead_obc_siv_decrypt_wrapper;
+    aead_enc = aead_pobc_siv_encrypt_wrapper;
+    aead_dec = aead_pobc_siv_decrypt_wrapper;
   }
   else if(strncmp(HTMAC_AES, primitive, strlen(HTMAC_AES)) == 0)
   {
@@ -325,9 +325,9 @@ int check_supported_primitive(const char *input)
     return 0;
   if (strncmp(GCM_AES_128, input, strlen(GCM_AES_128)) == 0)
     return 0;
-  if (strncmp(OBC_AES, input, strlen(OBC_AES)) == 0)
+  if (strncmp(POBC_AES, input, strlen(POBC_AES)) == 0)
     return 0;
-  if (strncmp(OBC_SIV_AES, input, strlen(OBC_SIV_AES)) == 0)
+  if (strncmp(POBC_SIV_AES, input, strlen(POBC_SIV_AES)) == 0)
     return 0;
   if (strncmp(HTMAC_AES, input, strlen(HTMAC_AES)) == 0)
     return 0;
@@ -349,8 +349,8 @@ int main(int argc, char* argv[])
     printf("\tsupported primitives:\n");
     printf("\t\t%s\n", GCM_SIV_AES_128);
     printf("\t\t%s\n", GCM_AES_128);
-    printf("\t\t%s\n", OBC_AES);
-    printf("\t\t%s\n", OBC_SIV_AES);
+    printf("\t\t%s\n", POBC_AES);
+    printf("\t\t%s\n", POBC_SIV_AES);
     printf("\t\t%s\n", HTMAC_AES);
     printf("\t\t%s\n", PMAC_AES);
     printf("\t\t%s\n", JOLTEON_AES_128);

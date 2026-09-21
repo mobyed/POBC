@@ -1,7 +1,7 @@
-#ifndef AES_OBC_H
-#define AES_OBC_H
+#ifndef AES_POBC_H
+#define AES_POBC_H
 
-int aes_obc_encrypt(
+int aes_pobc_encrypt(
   /** ciphertext destination buffer */
   unsigned char *c,
   /** tag destination buffer */

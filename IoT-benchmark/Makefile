@@ -6,7 +6,7 @@ LIB_MBED_CRYPTO=mbedtls/library/libmbedcrypto.a
 LDFLAGS= -L mbedtls/library/ -l mbedcrypto -lcrypto
 
 OBJS=aes/aes.o aes/ghash.o aes/polyval.o aes/aes_gcm.o aes/aes_gcm_siv.o \
-	aes-obc/aes_obc.o aes-obc/aes_obc_siv.o \
+	aes-pobc/aes_pobc.o aes-pobc/aes_pobc_siv.o \
 	aes-modes/aes_modes.o \
 	eevee-forkskinny/espeon.o eevee-forkskinny/jolteon.o \
 	aes/jolteon_aes.o aes/espeon_aes.o
@@ -19,11 +19,11 @@ all: generate.x
 generate.x: generate.c ${OBJS} ${LIBS}
 	${CC} ${CFLAGS} -o generate.x generate.c ${GENERATE_X_OBJS} ${OBJS} -lm ${LDFLAGS}  ${LIB_BLAKE2s}
 
-aes-obc/aes_obc.o: aes-obc/aes_obc.c aes-obc/aes_obc.h
-	$(CC) $(CFLAGS) -c -o aes-obc/aes_obc.o aes-obc/aes_obc.c
+aes-pobc/aes_pobc.o: aes-pobc/aes_pobc.c aes-pobc/aes_pobc.h
+	$(CC) $(CFLAGS) -c -o aes-pobc/aes_pobc.o aes-pobc/aes_pobc.c
 
-aes-obc/aes_obc_siv.o: aes-obc/aes_obc_siv.c aes-obc/aes_obc_siv.h
-	$(CC) $(CFLAGS) -c -o aes-obc/aes_obc_siv.o aes-obc/aes_obc_siv.c
+aes-pobc/aes_pobc_siv.o: aes-pobc/aes_pobc_siv.c aes-pobc/aes_pobc_siv.h
+	$(CC) $(CFLAGS) -c -o aes-pobc/aes_pobc_siv.o aes-pobc/aes_pobc_siv.c
 
 aes-modes/aes_modes.o: aes-modes/aes_modes.c aes-modes/aes_modes.h
 	$(CC) $(CFLAGS) -c -o aes-modes/aes_modes.o aes-modes/aes_modes.c
@@ -50,7 +50,7 @@ ${LIB_MBED_CRYPTO}: mbedtls/
 	CC=${CC} CFLAGS="${CFLAGS}" $(MAKE) library/libmbedcrypto.a
 
 clean:
-	rm -f *.o *.x aes/*.o aes-obc/*.o aes-modes/*.o
+	rm -f *.o *.x aes/*.o aes-pobc/*.o aes-modes/*.o
 	rm -rf blake2s-opt-bin/
 	cd mbedtls && $(MAKE) clean
 

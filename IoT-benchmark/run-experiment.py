@@ -5,7 +5,7 @@ import argparse
 
 def check_file_type(filepath):
     lower_path = filepath.lower()
-    return ('obc' in lower_path) and ('siv' in lower_path)
+    return ('pobc' in lower_path) and ('siv' in lower_path)
 
 def main():
     parser = argparse.ArgumentParser(description='Run experiment on connected microcontroller')
@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
     ser = serial.Serial('/dev/ttyUSB0', 115200)
     if check_file_type(args.samplepath):
-        print("Running OBC+SIV version")
+        print("Running POBC+SIV version")
         HEADER = b'\x00\xff\x00'
         def listen(ser):
             if ser.in_waiting > 0:

@@ -3,8 +3,8 @@ import math
 import random
 
 from Programs.Source.aes_gcm import aes_gcm_128_decrypt
-from Programs.Source.aes_obc64 import aes_obc64_128_decrypt
-from Programs.Source.aes_obc_siv import aes_obc_siv_128_decrypt
+from Programs.Source.aes_pobc64 import aes_pobc64_128_decrypt
+from Programs.Source.aes_pobc_siv import aes_pobc_siv_128_decrypt
 from Programs.Source.aes_gcm_siv import aes_gcm_siv_128_decrypt
 from Programs.Source.aes_modes import dec_pmac_aes128, dec_htmac_aes128
 
@@ -42,7 +42,7 @@ if circuit == 'aes_gcm64':
     start_timer(1)
     check, message = aes_gcm_128_decrypt(ciphertext, tag, key, nonce)
     stop_timer(1)
-elif circuit == 'aes_obc64':
+elif circuit == 'aes_pobc64':
     @for_range(simd)
     def _(i):
         program.bit_length = 128
@@ -54,10 +54,10 @@ elif circuit == 'aes_obc64':
         ##ciphertext = [cgf2n(1,size = 1)]*16
         tag = [cgf2n(0, size=1) for _ in range(16)] #random_bytes(16, cgf2n)
         start_timer(1)
-        check, message = aes_obc64_128_decrypt(ciphertext, tag, key, nonce)
+        check, message = aes_pobc64_128_decrypt(ciphertext, tag, key, nonce)
         stop_timer(1)
         ##print_ln('%s ' * len(message), *[c.reveal() for c in message])
-elif circuit == 'aes_obc_siv':
+elif circuit == 'aes_pobc_siv':
     @for_range(simd)
     def _(i):
         program.bit_length = 128
@@ -69,7 +69,7 @@ elif circuit == 'aes_obc_siv':
         ##ciphertext = [cgf2n(1,size = 1)]*16
         tag = [cgf2n(0, size=1) for _ in range(16)] #random_bytes(16, cgf2n)
         start_timer(1)
-        check, message = aes_obc_siv_128_decrypt(ciphertext, tag, key, nonce)
+        check, message = aes_pobc_siv_128_decrypt(ciphertext, tag, key, nonce)
         stop_timer(1)
         #print_ln('%s ' * len(message), *[c.reveal() for c in message])
 elif circuit == 'aes_gcm_siv64':
