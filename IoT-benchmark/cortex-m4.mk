@@ -20,8 +20,8 @@ all: htmac_aes_benchmark.bin \
 	pmac_aes_benchmark.bin \
 	aes_gcm_siv_benchmark_128.bin \
 	aes_gcm_benchmark_128.bin \
-	aes_obc_benchmark.bin \
-	aes_obc_siv_benchmark.bin \
+	aes_pobc_benchmark.bin \
+	aes_pobc_siv_benchmark.bin \
 	jolteon_aes_benchmark_128.bin \
 	espeon_aes_benchmark_128.bin
 
@@ -43,8 +43,8 @@ LDFLAGS		+= --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 		   $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib
 
 OBJS=aes/aes.o aes/aes.s aes/ghash.o aes/polyval.o aes/aes_gcm.o aes/aes_gcm_siv.o \
-	aes-obc/aes_obc.o \
-	aes-obc/aes_obc_siv.o \
+	aes-pobc/aes_pobc.o \
+	aes-pobc/aes_pobc_siv.o \
 	aes-modes/aes_modes.o \
 	eevee-forkskinny/eevee_common.o eevee-forkskinny/espeon.o eevee-forkskinny/jolteon.o \
 	aes/aes_xex_fork.o aes/jolteon_aes.o aes/espeon_aes.o
@@ -54,11 +54,11 @@ LIBS=${LIB_BLAKE2s} ${LIB_MBED_CRYPTO}
 aes-modes/aes_modes.o: aes-modes/aes_modes.c
 	${CC} ${CFLAGS} -c -o aes-modes/aes_modes.o aes-modes/aes_modes.c
 
-aes-obc/aes_obc.o: aes-obc/aes_obc.c
-	${CC} ${CFLAGS} -c -o aes-obc/aes_obc.o aes-obc/aes_obc.c
+aes-pobc/aes_pobc.o: aes-pobc/aes_pobc.c
+	${CC} ${CFLAGS} -c -o aes-pobc/aes_pobc.o aes-pobc/aes_pobc.c
 
-aes-obc/aes_obc_siv.o: aes-obc/aes_obc_siv.c
-	${CC} ${CFLAGS} -c -o aes-obc/aes_obc_siv.o aes-obc/aes_obc_siv.c
+aes-pobc/aes_pobc_siv.o: aes-pobc/aes_pobc_siv.c
+	${CC} ${CFLAGS} -c -o aes-pobc/aes_pobc_siv.o aes-pobc/aes_pobc_siv.c
 
 eevee-forkskinny/jolteon.o: eevee-forkskinny/jolteon.h eevee-forkskinny/eevee_common.h eevee-forkskinny/jolteon_core.c eevee-forkskinny/jolteon.c
 	${CC} ${CFLAGS} -D${FORKSKINNY_BACKEND} -c -o eevee-forkskinny/jolteon.o eevee-forkskinny/jolteon.c
@@ -89,7 +89,7 @@ ${LIB_MBED_CRYPTO}: mbedtls/
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	rm -f *.o *.d *.elf *.bin aes/*.o aes/*.d aes-modes/*.o aes_modes/*.d aes-obc/*.o aes-obc/*.d
+	rm -f *.o *.d *.elf *.bin aes/*.o aes/*.d aes-modes/*.o aes_modes/*.d aes-pobc/*.o aes-pobc/*.d
 	rm -rf blake2s-opt-bin/
 	cd mimc-gmp && $(MAKE) -f cortex-m4.mk clean
 	cd mbedtls && $(MAKE) clean
